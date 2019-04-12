@@ -24,9 +24,8 @@ void scanline_convert( struct matrix *points, int i, screen s, zbuffer zb ) {
   t = points->m[i];
   b = points->m[i+1];
   m = points->m[i+2];
-  if(
   for(int k=i; k<i+3; k++){
-    if(points->m[k][2]
+    
   }
 }
 
