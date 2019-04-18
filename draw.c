@@ -85,25 +85,60 @@ void scanline_convert( struct matrix *points, int i, screen s, zbuffer zb ) {
   }
   */
 
-  double x0, x1, x0_delta, x1_delta, y;
-
+  double x0, x1, z0, z1, x0_delta, x1_delta, z0_delta, z1_delta, y;
+  
   y=by;
   x0=bx;
   x1=bx;
-  x0_delta = (tx-bx)/(ty-by);
-  x1_delta = (my-by)==0?(mx-bx):(mx-bx)/(my-by);
+  z0=bz;
+  z1=bz;
+
   
-  printf("%lf, %lf, %lf, %lf, %lf\n", ty, my, by, x0_delta, x1_delta);
-  printf("%lf, %lf, %lf, %lf, %lf\n", tx, mx, bx, x0_delta, x1_delta);
-  for(y; y<ty; y++){
+  x1_delta = (my-by)==0?(mx-bx):(mx-bx)/(my-by);
+  z0_delta = (tz - bz)/(ty - by);
+  z1_delta = (my-by)==0?(mz-bz):(mz-bz)/(my-by); 
+
+  /*
+  x0_delta = (tx - bx)/(ty - by);
+  x1_delta = (mx - bx)/(my - by);
+  */ 
+
+  //  printf("%lf, %lf, %lf, %lf, %lf\n", ty, my, by, x0_delta, x1_delta);
+  //  printf("%lf, %lf, %lf, %lf, %lf\n", tx, mx, bx, x0_delta, x1_delta);
+
+  /*for(y; y<ty; y++){
     printf("%lf\n", x1-x0);
     draw_line(x0,y,bz,x1,y,bz,s,zb,c);
 
-    if(y>my)
+    if(y>=my)
       x1_delta = (ty-my)==0?(tx-mx):(tx-mx)/(ty-my);
-
+    
     x0 += x0_delta;
     x1 += x1_delta;
+    z0 += z0_delta;
+    z1 += z1_delta;
+
+  }
+  */
+  x0_delta = (tx-bx)/(ty-by);
+  x1_delta = (mx-bx)/(my-by);
+  x0_delta = (tx-bx)/(ty-by);
+  x0_delta = (tx-bx)/(ty-by);
+  for (double y = by; y < my; y++) {
+    draw_line(x0, y, z0, x1, y, z1, s, zb, c);
+    z0 += (tz-bz)/(ty-by);
+    x0 += (tx-bx)/(ty-by);
+    x1 += (mx-bx)/(my-by);
+    z1 += (mz-bz)/(my-by);
+  }
+  x1 = mx;
+  z1 = mz;
+  for (double y = (int)my; y < ty; y++) {
+    draw_line(x0, y, z0, x1, y, z1, s, zb, c);
+    x1 += (tx-mx)/(ty-my);
+    x0 += (tx-bx)/(ty-by);
+    z0 += (tz-bz)/(ty-by);
+    z1 += (tz-mz)/(ty-my);
   }
 }
 
